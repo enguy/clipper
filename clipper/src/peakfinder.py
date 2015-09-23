@@ -487,8 +487,12 @@ def filter_results(results, poisson_cutoff, transcriptome_size,
         peaks = bh_correct(peaks)
         #peaks['final_p_value'] = (peaks['final_p_value'] * total_clusters)
 
-    #This is a bug I should fix, padj isn't getting printed, the uncorreded p-value is
-    final_result = peaks[peaks['padj'] < poisson_cutoff]
+    	#This is a bug I should fix, padj isn't getting printed, the uncorrected p-value is
+    	final_result = peaks[peaks['padj'] < poisson_cutoff]
+    else:
+    	# Calculating final_result if bonferroni_correct is not set
+    	#	Assuming that if bonferroni_correct is not set, we will just use the non-adjusted final_p_value
+    	final_result = peaks[peaks['final_p_value'] < poisson_cutoff]
 
     return final_result.apply(write_peak, axis=1).values
 
